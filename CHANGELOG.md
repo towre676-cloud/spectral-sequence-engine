@@ -1,3 +1,10 @@
+## 0.3.0 — Additional exact algebraic machinery (November 6, 2026)
+
+- Finite free integral chain-complex total homology, including torsion invariant factors, without third-party runtime dependencies.
+- Exact-couple validation and iterative derived couples with a nonzero derived d₂ witness.
+- Filtered associative DGAs over prime fields, chain and page products, graded Leibniz, associative/commutative checks, and representative-independence verification.
+- Expanded tests, packaging, CI compilation, documentation, and honest scope boundaries.
+
 # Change log
 
 ## 0.2.0 — exact filtered chain-complex expansion (proposed)

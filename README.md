@@ -19,7 +19,10 @@ persistence cross-checks, and portable computational replay receipts.
 | Finite-filtration convergence and barcode-length identities | Checked |
 | Filtered chain maps and `dᵣ` naturality | Implemented and checked |
 | Deterministic JSON receipts with tamper and replay checks | Implemented |
-| Integral torsion, multiplicative structure, cohomology spectral sequences, extension problems | **Not implemented** |
+| Total integral homology with free and torsion invariant factors | Implemented (separate chain-complex module) |
+| Prime-field multiplicative pages of a supplied filtered DGA | Implemented and checked |
+| Ungraded exact-couple validation and successive derived couples | Implemented |
+| Integral spectral pages, graded geometric exact couples, cohomology spectral sequences, extension problems | **Not implemented** |
 
 ## See a nonzero higher differential
 
@@ -88,6 +91,11 @@ persistence remains available. Call `to_chain_complex(prime=3)` to upgrade a
 simplicial filtration to signed oriented boundaries over **F₃**, or use
 `page(r)` / `differential(r)` directly from the legacy object.
 
+Further modules `integral.IntegralChainComplex`, `multiplicative.FilteredDGA`,
+and `exact_couple.ExactCouple` provide integral **total** homology, filtered
+DGA page products, and ungraded derived exact couples respectively. See
+[extension examples and precise limitations](docs/EXTENSIONS.md).
+
 Filtered chain maps are in `morphisms.FilteredChainMap`, which rejects maps
 that fail to preserve degree, filtration, or the chain-map square, and checks
 naturality on every computed page.
@@ -113,7 +121,8 @@ See [the mathematical conventions](docs/MATH.md),
 
 ## Scope and research integrity
 
-This is a **finite, field-valued homological engine**. Its exact equalities
+The primary spectral-page engine is **finite and field-valued**. Its separate
+integral routine computes total homology over Z, not integral spectral pages. Its exact equalities
 are derived by machine-executed modular linear algebra and deterministic
 replay—not a Lean/Coq proof, and not a solution to arbitrary spectral-sequence
 convergence or extension problems. Complexity grows with the number of
