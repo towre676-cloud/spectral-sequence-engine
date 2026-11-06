@@ -14,6 +14,7 @@ from itertools import combinations
 from collections import Counter
 
 from spectral_sequence import FilteredChainComplex
+from simplicial_maps import SimplicialComplex, SimplicialMap
 
 TETRAHEDRA = """
 a_0 b_0 b_1 c_1
@@ -69,8 +70,26 @@ def simplicial_hopf_filtration():
     return [(s,len({v[0] for v in s})-1) for s in sorted(simplices)]
 
 
+def hopf_simplicial_map():
+    """Feed the published 36 facets and vertex projection to the generic engine.
+
+    The separate simplicial_hopf_filtration() above remains an independent
+    combinatorial reference for the expected birth labels of all 168 faces.
+    """
+    tetrahedra=[tuple(row.split()) for row in TETRAHEDRA.splitlines() if row.strip()]
+    if len(tetrahedra)!=36 or len(set(frozenset(t) for t in tetrahedra))!=36:
+        raise ArithmeticError('published triangulation must have 36 distinct facets')
+    total=SimplicialComplex(tetrahedra)
+    base=SimplicialComplex([tuple(v) for v in ('abc','abd','acd','bcd')])
+    projection=SimplicialMap(total,base,{v:v[0] for v in total.vertices})
+    if set(projection.induced_filtration())!=set(simplicial_hopf_filtration()):
+        raise ArithmeticError('automatically induced and published Hopf filtrations disagree')
+    return projection
+
+
 def hopf_complex(prime=2):
-    return FilteredChainComplex.from_simplicial(simplicial_hopf_filtration(),prime=prime)
+    """Hopf chain complex constructed by the generic simplicial-map adapter."""
+    return hopf_simplicial_map().chain_complex(prime)
 
 
 def report(prime=2):

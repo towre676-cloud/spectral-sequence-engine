@@ -6,7 +6,7 @@ A Python research toolkit for moving from a filtered boundary operator to genuin
 spectral-sequence pages and differentials, with rigorous finite-field arithmetic,
 persistence cross-checks, and portable computational replay receipts.
 
-**What it calculates now (v0.4.0):**
+**What it calculates now (v0.5.0):**
 
 | Calculation | Status |
 |---|---|
@@ -25,14 +25,63 @@ persistence cross-checks, and portable computational replay receipts.
 | Higher Bockstein spectral sequence from integral chain lifts | Implemented, with independent prime-primary torsion-rank cross-checks |
 | First-quadrant double complexes and both filtration spectral sequences | Implemented, with independently computed E1/E2 |
 | Singly graded exact couples and their derived differentials | Implemented |
+| **Arbitrary finite simplicial-map adapters** and automatic base-skeletal filtrations | **Implemented**, with degenerate simplex handling and oriented chain-map naturality |
+| Inverse images of base skeleta, vertex fibers and subcomplexes | Implemented and checked |
+| Independent `E1` relative-homology computation from geometric same-level boundaries | Implemented |
+| Staircase triangulations of finite simplicial products | Implemented |
+| Simplicial mapping tori and circle-base local coefficient systems | Implemented and independently checked using fiber monodromy |
+| Total integral simplicial homology and Bockstein of constructed spaces | Implemented (distinct from integral filtered pages) |
 | Serre-style Hopf fibration from a published 36-tetrahedron simplicial map | Reproduced over F2/F3/F5/F7 |
 | General integral filtered pages, arbitrary geometric Serre/Adams sequences, extension problems | **Not implemented** |
 
+## v0.5.0: geometry-to-spectral-sequence pipeline
+
+Give the engine an **arbitrary finite simplicial map** (domain facets, base facets
+and a vertex map) and it constructs the base-skeletal filtration automatically.
+It validates simplex images, checks oriented chain maps and graded naturality,
+computes actual `d_r` matrices, and independently reconstructs `E1` relative
+homology from the filtration blocks. These calculations are **filtration
+spectral sequences**; without fibration hypotheses we make **no generic Serre
+spectral sequence claim**.
+
+```python
+from simplicial_maps import SimplicialComplex, SimplicialMap
+K = SimplicialComplex([('x','y','z')])
+B = SimplicialComplex([('a','b')])
+f = SimplicialMap(K, B, {'x':'a', 'y':'b', 'z':'b'})
+assert f.chain_complex(3).verify()
+assert f.chain_map(3).verify_naturality()
+assert f.relative_e1_page(3) == f.chain_complex(3).page(1)
+```
+
+```sh
+python -m simplicial_maps examples/hopf_simplicial_map.json --prime 3 \
+    --certificate geometric-receipt.json
+python -m simplicial_maps --replay geometric-receipt.json
+python -m simplicial_maps --example klein --prime 3
+python -m research.geometric_benchmarks
+python -m research.random_geometry_audit --trials 1000 --seed 20261106
+```
+
+The **Hopf fibration** and the independently constructed **trivial projection**
+`S1 × S2 -> S2` have the same 168-simplex f-vector and the same `E2`
+dimensions, but their calculated `d2` ranks are **1 and 0**, respectively.
+The geometric mapping-torus constructor additionally distinguishes the torus
+and Klein bottle through nontrivial `pi1`-action on fiber homology. The Klein
+bottle has `H1(Z) = Z ⊕ Z/2`, confirmed independently using integral simplex
+boundaries and a rank-one mod-2 first Bockstein; an orientation-reversing
+`S2` mapping torus yields `H2(Z) = Z/2`. The mod-2 and odd-prime page
+comparisons agree with explicit monodromy invariant/coinvariant calculations.
+
+See [geometric definitions, exact benchmark data and scope boundaries](docs/GEOMETRIC_FILTRATIONS.md).
+
 ## Research landmark: the actual triangulated Hopf fibration
 
-Our `research/hopf_fibration.py` transcribes a published simplicial map
-`S¹ → S³ → S²`, closes its 36 tetrahedral facets under faces (168 simplices),
-then filters the triangulated S³ by preimages of the **base skeleta**.
+Our `research/hopf_fibration.py` passes the published simplicial Hopf map
+`S³ → S²` (with fiber `S¹`) to the general-purpose geometric adapter and
+retains an independent filtration reference. The adapter closes its 36
+tetrahedral facets under faces (168 simplices) and filters the total space
+by inverse images of the **base skeleta**.
 Without manually entering page differentials, the engine obtains exactly the
 four expected one-dimensional E2 positions `(0,0), (0,1), (2,0), (2,1)`, a
 **nonzero d2** from `(2,0)` to `(0,1)`, and E3 containing just `(0,0)`
@@ -139,8 +188,10 @@ simplicial filtration to signed oriented boundaries over **F₃**, or use
 Further modules `integral.IntegralChainComplex`, `multiplicative.FilteredDGA`,
 and `exact_couple.ExactCouple` provide integral **total** homology, filtered
 DGA page products, and ungraded derived exact couples respectively. Version
-0.4.0 adds `bockstein.LiftedBockstein`, `bicomplex.DoubleComplex`,
-`bicomplex.tensor_double_complex`, and `graded_couple.GradedExactCouple`. See
+0.4.0 added `bockstein.LiftedBockstein`, `bicomplex.DoubleComplex`,
+`bicomplex.tensor_double_complex`, and `graded_couple.GradedExactCouple`.
+Version 0.5.0 adds `simplicial_maps.SimplicialMap`, `simplicial_product`,
+`mapping_torus_projection`, and `circle_local_system_e2`. See
 [extension examples and precise limitations](docs/EXTENSIONS.md).
 
 Filtered chain maps are in `morphisms.FilteredChainMap`, which rejects maps
@@ -168,7 +219,11 @@ See [the mathematical conventions](docs/MATH.md),
 
 ## Scope and research integrity
 
-The primary filtered spectral-page engine is **finite and field-valued**. Its separate
+The primary filtered spectral-page engine is **finite and field-valued**.
+The general geometric-map adapter produces a base-skeletal filtration spectral
+sequence, **not necessarily** a Serre spectral sequence; only the designated
+Hopf, product and mapping-torus examples carry the specified geometric bundle
+interpretations. Its separate
 integral routines compute total homology over Z and a prime-field Bockstein spectral
 sequence from that integral data, **not general integral filtered spectral pages**. Its exact equalities
 are derived by machine-executed modular linear algebra and deterministic
