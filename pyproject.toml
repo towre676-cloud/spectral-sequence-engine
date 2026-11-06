@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spectral-sequence-engine"
-version = "0.3.0"
-description = "Exact spectral sequences, filtered DGAs, derived exact couples and integral homology"
+version = "0.4.0"
+description = "Exact spectral sequences, geometric Hopf example, lifted Bocksteins and graded algebraic machinery"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "Spectral Sequence Engine contributors"}]
@@ -15,4 +15,5 @@ dependencies = []
 spectral-sequence = "spectral_sequence:main"
 
 [tool.setuptools]
-py-modules = ["spectral_sequence", "filtered_complex", "morphisms", "multiplicative", "exact_couple", "integral"]
+py-modules = ["spectral_sequence", "filtered_complex", "morphisms", "multiplicative", "exact_couple", "integral", "bockstein", "bicomplex", "graded_couple"]
+packages = ["research"]

@@ -6,7 +6,7 @@ A Python research toolkit for moving from a filtered boundary operator to genuin
 spectral-sequence pages and differentials, with rigorous finite-field arithmetic,
 persistence cross-checks, and portable computational replay receipts.
 
-**What it calculates now:**
+**What it calculates now (v0.4.0):**
 
 | Calculation | Status |
 |---|---|
@@ -22,7 +22,52 @@ persistence cross-checks, and portable computational replay receipts.
 | Total integral homology with free and torsion invariant factors | Implemented (separate chain-complex module) |
 | Prime-field multiplicative pages of a supplied filtered DGA | Implemented and checked |
 | Ungraded exact-couple validation and successive derived couples | Implemented |
-| Integral spectral pages, graded geometric exact couples, cohomology spectral sequences, extension problems | **Not implemented** |
+| Higher Bockstein spectral sequence from integral chain lifts | Implemented, with independent prime-primary torsion-rank cross-checks |
+| First-quadrant double complexes and both filtration spectral sequences | Implemented, with independently computed E1/E2 |
+| Singly graded exact couples and their derived differentials | Implemented |
+| Serre-style Hopf fibration from a published 36-tetrahedron simplicial map | Reproduced over F2/F3/F5/F7 |
+| General integral filtered pages, arbitrary geometric Serre/Adams sequences, extension problems | **Not implemented** |
+
+## Research landmark: the actual triangulated Hopf fibration
+
+Our `research/hopf_fibration.py` transcribes a published simplicial map
+`S¹ → S³ → S²`, closes its 36 tetrahedral facets under faces (168 simplices),
+then filters the triangulated S³ by preimages of the **base skeleta**.
+Without manually entering page differentials, the engine obtains exactly the
+four expected one-dimensional E2 positions `(0,0), (0,1), (2,0), (2,1)`, a
+**nonzero d2** from `(2,0)` to `(0,1)`, and E3 containing just `(0,0)`
+and `(2,1)`. This reproduces the E0/E1/E2/E3 **dimensions** reported in the
+[Macaulay2 worked Hopf-fibration example](https://www.macaulay2.com/doc/Macaulay2-1.25.11/share/doc/Macaulay2/SpectralSequences/html/___Computing_spthe_sp__Serre_sp__Spectral_sp__Sequence_spassociated_spto_spa_sp__Hopf_sp__Fibration.html)
+from actual simplicial data, now checked over F2/F3/F5/F7.
+
+```sh
+python -m research.hopf_fibration
+python -m unittest tests.test_hopf_fibration -v
+```
+
+The [research report](docs/RESEARCH_2026_11_06.md) documents provenance,
+mathematical interpretation, exact algorithms, limitations and next targets.
+This is a **specific geometric example**, not an implementation of general
+Serre spectral sequences or discovery of a new Hopf-fibration theorem.
+
+### Higher Bockstein differentials from integer lifts
+
+```python
+from integral import IntegralChainComplex
+from bockstein import LiftedBockstein
+c = IntegralChainComplex([1, 1], {1: [[16]]})
+b = LiftedBockstein(c, prime=2)
+assert b.differential(1)[1] == ((0,),)
+assert b.differential(4)[1] == ((1,),)
+assert b.page(5) == {}
+assert b.verify()
+```
+
+The Bockstein engine constructs actual integer lifts and beta_r maps and
+cross-checks their ranks against independently calculated integral torsion.
+See `bockstein.py` for the separate rank-only interface and deterministic
+certificate/replay. `bicomplex.py` and `graded_couple.py` supply new structural
+machinery for double-complex and graded exact-couple calculations.
 
 ## See a nonzero higher differential
 
@@ -93,7 +138,9 @@ simplicial filtration to signed oriented boundaries over **F₃**, or use
 
 Further modules `integral.IntegralChainComplex`, `multiplicative.FilteredDGA`,
 and `exact_couple.ExactCouple` provide integral **total** homology, filtered
-DGA page products, and ungraded derived exact couples respectively. See
+DGA page products, and ungraded derived exact couples respectively. Version
+0.4.0 adds `bockstein.LiftedBockstein`, `bicomplex.DoubleComplex`,
+`bicomplex.tensor_double_complex`, and `graded_couple.GradedExactCouple`. See
 [extension examples and precise limitations](docs/EXTENSIONS.md).
 
 Filtered chain maps are in `morphisms.FilteredChainMap`, which rejects maps
@@ -121,8 +168,9 @@ See [the mathematical conventions](docs/MATH.md),
 
 ## Scope and research integrity
 
-The primary spectral-page engine is **finite and field-valued**. Its separate
-integral routine computes total homology over Z, not integral spectral pages. Its exact equalities
+The primary filtered spectral-page engine is **finite and field-valued**. Its separate
+integral routines compute total homology over Z and a prime-field Bockstein spectral
+sequence from that integral data, **not general integral filtered spectral pages**. Its exact equalities
 are derived by machine-executed modular linear algebra and deterministic
 replay—not a Lean/Coq proof, and not a solution to arbitrary spectral-sequence
 convergence or extension problems. Complexity grows with the number of
