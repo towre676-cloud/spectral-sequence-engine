@@ -1,13 +1,27 @@
-name: Tests
+name: Exact spectral sequence regression
 on:
   push:
   pull_request:
+permissions:
+  contents: read
 jobs:
   unittest:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      - run: python -m unittest discover -s tests -v
+          python-version: ${{ matrix.python-version }}
+      - name: Compile modules
+        run: python -m compileall -q filtered_complex.py spectral_sequence.py morphisms.py
+      - name: Execute test suite
+        run: python -m unittest discover -s tests -v
+      - name: Replay higher differential receipt
+        run: |
+          python spectral_sequence.py --example d3 --certificate /tmp/d3-receipt.json
+          python spectral_sequence.py --replay /tmp/d3-receipt.json
