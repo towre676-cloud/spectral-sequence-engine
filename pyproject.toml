@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spectral-sequence-engine"
+version = "0.2.0"
+description = "Exact finite-field spectral-sequence pages and filtered chain maps"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Spectral Sequence Engine contributors"}]
+dependencies = []
+
+[project.scripts]
+spectral-sequence = "spectral_sequence:main"
+
+[tool.setuptools]
+py-modules = ["spectral_sequence", "filtered_complex", "morphisms"]

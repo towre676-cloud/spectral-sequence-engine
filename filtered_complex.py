@@ -2,7 +2,7 @@
 
 Computes ordinary one-parameter persistence and the ranks of the E^1
 associated-graded homology groups E^1_{p,q}=H_{p+q}(F_p,F_{p-1}).
-Does NOT yet compute d^r, r>=1, extension data, or general sheaf cohomology.
+For exact higher differentials use ``to_chain_complex()``.
 """
 from collections import defaultdict
 
@@ -116,3 +116,16 @@ class FilteredComplex:
                 if b:
                     result[(p, d-p)] = b
         return result
+
+    def to_chain_complex(self, prime=2):
+        """Build the exact prime-field spectral-sequence engine."""
+        from spectral_sequence import FilteredChainComplex
+        return FilteredChainComplex.from_simplicial(self.cells, prime=prime)
+
+    def page(self, r, prime=2):
+        """Return E_r dimensions via exact filtered chain-complex calculus."""
+        return self.to_chain_complex(prime).page(r)
+
+    def differential(self, r, prime=2):
+        """Return explicit d_r matrices, target indices and ranks."""
+        return self.to_chain_complex(prime).differential(r)
