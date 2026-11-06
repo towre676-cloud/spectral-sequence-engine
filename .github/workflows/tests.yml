@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Compile modules
-        run: python -m compileall -q filtered_complex.py spectral_sequence.py morphisms.py
+        run: python -m compileall -q filtered_complex.py spectral_sequence.py morphisms.py integral.py exact_couple.py multiplicative.py
       - name: Execute test suite
         run: python -m unittest discover -s tests -v
       - name: Replay higher differential receipt
