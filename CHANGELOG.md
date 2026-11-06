@@ -1,3 +1,13 @@
+## 0.5.0 — Reusable simplicial geometry and twisted circle bundles (November 6, 2026)
+
+- General finite simplicial-map engine accepting domain/base generating facets and a checked vertex map; canonical ordered simplices, degeneracies and induced base-skeletal filtrations.
+- Concrete inverse-image subcomplexes, fibers, independent relative E1 computation, oriented filtered chain-map comparison and page naturality.
+- Staircase simplex-product triangulations, nontrivial mapping tori, and independently computed circle local-system E2 from homology monodromy.
+- Geometric Hopf refactor: compare the published reference filtration and automatically generated simplex births; verify Hopf S3 and trivial S1×S2 have identical 168-simplex f-vectors and E2 but rank-one vs rank-zero d2.
+- Torus/Klein and twisted S2 bundle calculations: integral Z/2 torsion and mod-2 Bockstein vs odd-characteristic behavior; connected two-fold covering by exchanging discrete fiber sheets.
+- Human-readable and tagged JSON inputs; deterministic replay certificates; CLI, 20+ new tests, 100 seeded random-map unit checks and a separate 1,000-map reproducible audit, experimental reporting and explicit research boundaries.
+- Does **not** claim general Serre fibrations, integral filtered pages, Adams computations, or formal proof checking.
+
 ## 0.4.0 — Hopf geometry, lifted Bocksteins, graded couples, double complexes (November 6, 2026)
 
 - Independently reproduced the published simplicial Hopf-fibration spectral-sequence example: 36 tetrahedra, 168 faces, exact E0/E1/E2/E3, nonzero rank-one d2, and total S3 homology over four prime fields.

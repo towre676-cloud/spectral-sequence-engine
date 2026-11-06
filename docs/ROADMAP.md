@@ -20,6 +20,17 @@
 - Bockstein spectral sequences from finite free integral complexes, including actual beta_r matrices from integer lifts and independent torsion fingerprints.
 - A published 36-tetrahedron simplicial Hopf-map calculation reproducing the nonzero Serre d2 and S3 total homology over F2/F3/F5/F7.
 
+## Landed in v0.5.0
+
+- General finite simplicial-map validation, automatic filtration by inverse images
+  of base skeleta, oriented chain map and independent relative E1 verification.
+- Generic staircase product and mapping torus triangulation, plus true monodromy
+  action on fiber homology for circle-base bundle examples.
+- Geometric comparisons distinguishing the Hopf and trivial product d2, and
+  integral torsion/Bockstein distinctions for the Klein bottle and twisted S2 bundle.
+- Deterministic geometric input, receipt replay, failure cases and randomized
+  regression checks. Arbitrary maps are **not** asserted to be fibrations.
+
 ## Next: structural mathematics
 
 - Filtered mapping cones, distinguished long exact sequences, exact couples,
@@ -36,6 +47,8 @@
 
 ## Next: applications and external evidence
 
+- General monodromy/local systems over higher-dimensional bases and verifiable
+  geometric bundle hypotheses (not assumed from a simplicial map).
 - Explicit chain-level adapters for cell complexes, cubical complexes,
   selected filtered complexes in network science, and crystallographic
   cell complexes with trustworthy incidence data.

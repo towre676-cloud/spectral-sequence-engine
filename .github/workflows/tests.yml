@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Compile modules
-        run: python -m compileall -q filtered_complex.py spectral_sequence.py morphisms.py integral.py exact_couple.py multiplicative.py bockstein.py bicomplex.py graded_couple.py research
+        run: python -m compileall -q filtered_complex.py spectral_sequence.py morphisms.py integral.py exact_couple.py multiplicative.py bockstein.py bicomplex.py graded_couple.py simplicial_maps.py research
       - name: Execute test suite
         run: python -m unittest discover -s tests -v
       - name: Replay higher differential receipt
@@ -27,3 +27,11 @@ jobs:
           python spectral_sequence.py --replay /tmp/d3-receipt.json
       - name: Geometric Hopf fibration four-field replay
         run: python -m research.hopf_fibration
+      - name: Geometric Hopf, product and twisted mapping-torus benchmarks
+        run: python -m research.geometric_benchmarks
+      - name: Seeded 1000-map geometric audit
+        run: python -m research.random_geometry_audit --trials 1000 --seed 20261106
+      - name: JSON simplicial-map input and replay
+        run: |
+          python -m simplicial_maps examples/hopf_simplicial_map.json --prime 3 --certificate /tmp/hopf-map-replay.json
+          python -m simplicial_maps --replay /tmp/hopf-map-replay.json
