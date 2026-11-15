@@ -70,3 +70,6 @@ Bockstein are tested separately. The latter has zero β₁ and rank-one β₂,
 which detects the ambient order-four summand. The integral receipt
 distinguishes the individual classes a, 2a and 4a. It certifies total
 integral homology of the cone and does not compute integral spectral pages.
+
+For independent verification of these receipts, see the
+[receipt grammar, checker and proof](INTEGRAL_RECEIPT_CHECKER.md).
